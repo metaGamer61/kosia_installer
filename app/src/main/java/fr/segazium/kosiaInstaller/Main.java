@@ -32,6 +32,7 @@ public class Main {
         while(l != null) {
             if(!l.startsWith("#")) {
                 String[] datas = l.split("///");
+                System.out.println(l);
                 if(datas[0].equals("r")) {
                     mods_required.add(datas[1]);
                 } else if(datas[0].equals("o")) {
@@ -78,10 +79,8 @@ public class Main {
             if(folder.exists()) {
                 if(folder.isDirectory()) {
                     if(folder.listFiles().length != 0) {
-                        File sub = new File(folder, "../lastFiles");
-                        if(!sub.exists()) sub.mkdir();
                         for(File f : folder.listFiles()) {
-                            Files.move(f.toPath(), new File(sub, f.getName()).toPath(), StandardCopyOption.ATOMIC_MOVE);
+                            f.delete();
                         }
                     }
                     boolean success = true;

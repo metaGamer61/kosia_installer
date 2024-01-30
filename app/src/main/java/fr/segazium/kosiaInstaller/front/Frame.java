@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.EventObject;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -91,26 +92,33 @@ public class Frame extends JFrame implements ActionListener {
         int w = 500;
         ti.setBounds(f.getWidth()/2-w/2, path.getY()+path.getHeight()+10, w, 30);
         f.getContentPane().add(ti);
-
-        JTable table = new JTable(Main.mods_optionals.size()+Main.mods_required.size(), 3) {
+        JTable table = new JTable(Main.mods_optionals.size()+Main.mods_required.size(), 4) {
             public Class<?> getColumnClass(int column) {
-                if(column == 0) return String.class;
-                if(column == 1) return String.class;
-                if(column == 2) return Boolean.class;
-                return super.getColumnClass(column);
+                return new Class[] {String.class, String.class, Boolean.class, String.class}[column];
             }
             public String getColumnName(int column) {
-                if(column == 0) return "Name";
-                if(column == 1) return "Link";
-                if(column == 2) return "Download";
-                return super.getColumnName(column);
+                return new String[] {"Name", "Link", "Download", "status"}[column];
             }
             public boolean editCellAt(int row, int column, EventObject e) {
                 if(column == 0 || column == 1) return false;
                 String link = (String)getValueAt(row, 1);
-                return Main.mods_optionals.contains(link);
+                if(!Main.mods_optionals.contains(link)) return false;
+                return super.editCellAt(row, column, e);
             }
         };
+        table.setBackground(Colors.BG);
+        table.setForeground(Colors.font);
+        table.setFont(Colors.chars.deriveFont(Font.PLAIN, 14));
+        table.setBorder(BorderFactory.createLineBorder(Colors.borders, 0));
+        table.setRowHeight(40);
+        table.setTableHeader(null);
+        table.setRowSelectionAllowed(false);
+        table.setFocusable(false);
+        table.getColumnModel().getColumn(1).setMinWidth(0);
+        table.getColumnModel().getColumn(1).setMaxWidth(0);
+        table.getColumnModel().getColumn(1).setWidth(0);
+        table.getColumnModel().getColumn(2).setMaxWidth(30);
+        table.getColumnModel().getColumn(3).setMaxWidth(100);
         int row = 0;
         for(String mod : Main.mods_optionals) {
             String[] d = mod.split("/");
@@ -121,6 +129,7 @@ public class Frame extends JFrame implements ActionListener {
             } else {
                 table.setValueAt(false, row, 2);
             }
+            table.setValueAt("Optional", row, 3);
             row++;
         }
         for(String mod : Main.mods_required) {
@@ -128,15 +137,16 @@ public class Frame extends JFrame implements ActionListener {
             table.setValueAt(d[d.length-1], row, 0);
             table.setValueAt(mod, row, 1);
             table.setValueAt(true, row, 2);
+            table.setValueAt("Required", row, 3);
             row++;
         }
-        JScrollPane scroller = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        JScrollPane scroller = new JScrollPane(table);
         int y = ti.getY()+ti.getHeight()+30;
         scroller.setBounds(50+bordersize, y, f.getWidth()-100-bordersize, f.getHeight()-y-bordersize-80);
-        table.setBounds(0, 0, scroller.getWidth(), scroller.getHeight());
+        scroller.getViewport().setBackground(Colors.BG);
+        scroller.setBorder(BorderFactory.createLineBorder(Colors.borders));
         f.getContentPane().add(scroller);
-
-        install = new Button("Install (Move all files in a subfolder)");
+        install = new Button("Install (Delete folder content)");
         w = install.getPreferredSize().width+40;
         int h = install.getPreferredSize().height+20;
         install.setBounds(f.getWidth()/2-w/2, f.getHeight()-10-h, w, h);
@@ -152,7 +162,7 @@ public class Frame extends JFrame implements ActionListener {
             disableAll();
             Thread th = new Thread(() -> {
                 ArrayList<String> mods = new ArrayList<String>();
-                //calculates urls
+                for(int i = 0; i < table.getModel().getRowCount(); i++) if((boolean)table.getValueAt(i, 2)) mods.add((String)table.getValueAt(i, 1));
                 Main.install(ti.getText(), f, mods);
             });
             th.start();
