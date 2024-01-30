@@ -1,9 +1,9 @@
 #This file is a file that contain all mods to install in selected folder
 #Line that start with # are ignored
-#All sources are from curse forge official site https://www.curseforge.com/ except for kosia mod which is hosted on mediafire https://www.mediafire.com/
+#All sources are from curse forge official site https://www.curseforge.com/ except for kosia mod which is hosted on github https://github.com/
 #the "///" is a delimiter between teh type of mod (r = required, o = optional) and the mod download link
 #Kosia official mod by segazium
-r///https://download1593.mediafire.com/cvqbqep0hu4g1W9cjPvr6uWK7pd3e6yqe6dTqV7chczUQ2b_H0kiCUgU-uROCdlI7FQwcc6bkm1kBhyDRcGr90wMUQt5zX7zVYVj7RZqh0yjCnCs_vYNOcKRADSiiC0f-QfdUOkD-cCvFyYseWfEUMKrW1nodTyShzRMMTDxeYIp/be9j7mr9mhc0sbq/kosia-1.3.1-BETA1.jar
+r///https://github.com/metaGamer61/kosia_installer/raw/main/kosia_private_mods/kosia-1.3.1-BETA1.jar
 #Mouse Tweaks by YaLTeR
 o///https://mediafilez.forgecdn.net/files/4581/240/MouseTweaks-forge-mc1.20-2.25.jar
 #AppleSkin by squeek502
